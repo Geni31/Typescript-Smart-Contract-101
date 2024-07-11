@@ -9,7 +9,7 @@ class Expense {
     amount: number;
     category: string;  //invoice/payment dropdown
     recipient: string;   //sending to or receiving from
-    description: string;
+    notes: string;
     time: Date;
     status: boolean;    //in process/ done dropdown
 }
@@ -22,13 +22,13 @@ export default Server(() => {
 
 //Creating a new expense
     app.post("/expenses", (req, res) => {
-        const {category, recipient, amount, description, status } = req.body;
+        const {category, recipient, amount, notes, status } = req.body;
         const expense: Expense = {
             id: uuidv4(),
             category,
             recipient,
             amount,
-            description,
+            notes,
             time: getCurrentDate(), 
             status
         };
@@ -42,10 +42,10 @@ export default Server(() => {
         let expenses = expenseStorage.values();
 
         if(search){
+            const searchStr = search.toString().toLowerCase();
             expenses = expenses.filter(expense =>
-                expense.category.toLowerCase().includes(search.toString().toLowerCase())||
-                expense.recipient.toLowerCase().includes(search.toString().toLowerCase())
-                // (expense.status === 'in process' || expense.status === 'done' ) && expense.status.includes(search.toString().toLowerCase())
+                expense.category.toLowerCase().includes(searchStr)||
+                expense.recipient.toLowerCase().includes(searchStr)
             );
         }
 
